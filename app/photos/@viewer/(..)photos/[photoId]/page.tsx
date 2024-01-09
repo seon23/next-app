@@ -1,39 +1,25 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Modal from '@/app/ui/Modal';
+import Modal from '@/components/Modal';
+import { getPhotos } from '@/app/_lib/utils';
 
-// type Photo = {
-//   albumId: number;
-//   id: number;
-//   title: string;
-//   url: string;
-//   thumbnailUrl: string;
-// };
-
-async function getData() {
-  const res = await fetch(
-    'https://jsonplaceholder.typicode.com/photos?userId=1'
-  );
-  return res.json();
-}
-
-export default async function PhotoId({
-  params,
+export default async function Photo_intercept({
+  params: { photoId },
 }: {
   params: { photoId: string };
 }) {
-  const { photoId } = params;
   console.log('🚀 ~ photoId:', photoId);
-  const photos = await getData();
-  const photo = photos[photoId];
+  const photos = await getPhotos();
+  const photo = photos.find((photo) => photo.id === Number(photoId));
 
-  if (!photoId) {
+  if (!photo) {
     return notFound();
   }
+
   return (
     <div>
       <Modal>
-        <Image width={100} height={100} src={photo.url} alt={photo.title} className='' />
+        <Image src={photo.url} alt={photo.title} width={600} height={600} />
       </Modal>
     </div>
   );

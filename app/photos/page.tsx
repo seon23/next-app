@@ -1,33 +1,31 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { getPhotos } from '../_lib/utils';
 
-type Photo = {
-  albumId: number;
-  id: number;
-  title: string;
-  url: string;
-  thumbnailUrl: string;
-};
-// photo-listing
 export default async function Photos() {
-  const res = await fetch(
-    'https://jsonplaceholder.typicode.com/photos?userId=1'
-  );
-  const photos = await res.json();
+  const photos = await getPhotos();
 
   return (
     <div>
       <h1>Photo List</h1>
-      <ul>
-        {photos.map((photo: Photo) => (
-          <li key={photo.id}>
-            <Link href={'photos/' + photo.id}>
-              <h2>{photo.title}</h2>
-            </Link>
-            <Image width={100} height={100} src={photo.url} alt={photo.title} />
-          </li>
+      <div className='container grid sm:grid-cols-3 md:grid-cols-7 lg:grid-cols-9'>
+        {photos.map((photo) => (
+          <Link
+            key={photo.id}
+            href={`photos/${photo.id}`}
+            className='hover:bg-opacity-50'
+            scroll={false}
+          >
+            <Image
+              src={photo.thumbnailUrl}
+              alt={photo.title}
+              width={150}
+              height={150}
+              priority
+            />
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

@@ -1,30 +1,33 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import { getPhotos } from '@/app/_lib/utils';
 
-async function getData() {
-  const res = await fetch(
-    'https://jsonplaceholder.typicode.com/photos?userId=1'
-  );
-  return res.json();
+export async function generateStaticParams() {
+  const photos = await getPhotos();
+  return photos.map((photo) => {
+    photoId: photo.id;
+  });
 }
 
-export default async function Slug({
-  params,
+export default async function PhotoDetail({
+  params: { photoId },
 }: {
   params: { photoId: string };
 }) {
-  const { photoId } = params;
   console.log('🚀 ~ Slug ~ photoId:', photoId);
-  const photos = await getData();
-  const photo = photos[photoId];
+  const photos = await getPhotos();
 
-  if (!photoId) {
+  // TypeScript null assertion -> 반드시 있다는 뜻
+  // const photo = photos.find((photo) => photo.id === Number(photoId))!;
+
+  const photo = photos.find((photo) => photo.id === Number(photoId));
+  if (!photo) {
     return notFound;
   }
   return (
-    <div>
+    <div className='container mx-auto'>
       <h2>{photo.title}</h2>
-      <Image width={100} height={100} src={photo.url} alt={photo.title} />
+      <Image width={600} height={600} src={photo.url} alt={photo.title} />
     </div>
   );
 }

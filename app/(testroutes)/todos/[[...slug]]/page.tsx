@@ -1,6 +1,6 @@
 // 'use client';
 
-import { notFound } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export type Todo = {
   userId: number;
@@ -17,13 +17,15 @@ async function getData() {
 }
 
 export default async function Slug({ params }: { params: { slug: string[] } }) {
+  const router = useRouter();
   const { slug } = params;
   console.log('🚀 ~ Slug ~ slug:', slug);
   const todos = await getData();
   const todo = todos[+slug[0]];
 
   if (!slug?.length) {
-    return notFound();
+    router.push('/todos/1');
+    return;
   }
   return (
     <div>

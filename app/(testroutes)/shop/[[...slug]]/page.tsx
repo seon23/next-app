@@ -1,53 +1,37 @@
 // 'use client';
 
-import { notFound } from 'next/navigation';
+import SlugDetecter from '@/app/ui/SlugDetecter';
 
-// export type Post = {
-//   userId: number;
-//   id: number;
-//   title: string;
-//   body: string;
-// };
-
-export type Todo = {
+export type Post = {
   userId: number;
   id: number;
   title: string;
-  completed: boolean;
+  body: string;
 };
-
-// export default function Slug({ params }: { params: { slug: string[] } }) {
-//   const router = useRouter();
-//   const { slug } = params;
-//   console.log('🚀 ~ Slug ~ slug:', slug);
-
-//   if (!slug?.length) {
-//     console.log('Not found!');
-//     router.push('/shop/000');
-//     return;
-//   }
-//   return <div>SlugPage: {slug.join()}</div>;
-// }
-
-// 아래의 함수 이름은 그대로 써야함
-
-export const dynamicParams = true;
+// export const dynamicParams = true;
 export async function generateStaticParams() {
   const res = await fetch(
     'https://jsonplaceholder.typicode.com/todos?userId=1'
   );
   const todos = await res.json();
-  return todos.map((post: Todo) => ({
+  return todos.map((post: Post) => ({
     slug: [`${post.id}`],
   }));
 }
 
 export default function Slug({ params }: { params: { slug: string[] } }) {
   const { slug } = params;
+  const isValid = slug?.length > 0;
   console.log('🚀 ~ Slug ~ slug:', slug);
 
-  if (!slug?.length) {
-    return notFound();
-  }
-  return <div>SlugPage: {slug.join()}</div>;
+  return (
+    // Slug는 server component, SlugDetecter는 client component여서 '/shop'으로 접근했을 때 에러가 난다.
+    <div>
+      {isValid ? (
+        <div>SlugPage: {slug.join()}</div>
+      ) : (
+        <SlugDetecter slug={slug} />
+      )}
+    </div>
+  );
 }

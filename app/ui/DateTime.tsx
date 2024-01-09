@@ -7,6 +7,10 @@ export default function DateTime() {
 
   const dt = new Date().toString();
   console.log('🚀 ~ DateTime ~ dt:', dt);
+
+  // useEffect(() => {
+  //   console.log('DateTime!!');
+  // }, []);
   return (
     <div>
       <h1>DateTime</h1>

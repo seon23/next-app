@@ -1,6 +1,6 @@
 'use client';
 
-import BasicModal from '@/app/ui/BasicModal';
+import BasicModal from '@/components/BasicModal';
 import Link from 'next/link';
 import { useState } from 'react';
 

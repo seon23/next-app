@@ -1,12 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPhotos } from '../_lib/utils';
+import { signOut } from '../_lib/auth';
+import { Button } from '@/components/ui/button';
 
 export default async function Photos() {
   const photos = await getPhotos();
 
   return (
-    <div>
+    <>
+      <form
+        action={async () => {
+          'use server';
+          await signOut();
+        }}
+      >
+        <Button variant='outline'>SignOut</Button>
+      </form>
       <h1>Photo List</h1>
       <div className='container grid sm:grid-cols-3 md:grid-cols-7 lg:grid-cols-9'>
         {photos.map((photo) => (
@@ -26,6 +36,6 @@ export default async function Photos() {
           </Link>
         ))}
       </div>
-    </div>
+    </>
   );
 }

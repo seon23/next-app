@@ -6,7 +6,7 @@ export default function DateTime() {
   const [dtstr, setDtstr] = useState('');
 
   const dt = new Date().toString();
-  console.log('🚀 ~ DateTime ~ dt:', dt);
+  // console.log('🚀 ~ DateTime ~ dt:', dt);
 
   // useEffect(() => {
   //   console.log('DateTime!!');
